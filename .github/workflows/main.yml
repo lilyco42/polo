@@ -1,3 +1,10 @@
+name: Build Executable with Nuitka
+
+on:
+  push:
+    branches:
+      - master # Trigger on pushes to the 'master' branch
+
 jobs:
 build:
    strategy:

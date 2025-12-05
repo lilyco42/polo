@@ -1,3 +1,11 @@
+# Compilation mode, standalone everywhere, except on macOS there app bundle
+# nuitka-project: --mode=app
+
+# Debugging options, controlled via environment variable at compile time.
+# nuitka-project-if: {OS} == "Windows" and os.getenv("DEBUG_COMPILATION", "no") == "yes"
+#     nuitka-project: --windows-console-mode=hide
+# nuitka-project-else:
+#     nuitka-project: --windows-console-mode=disabled
 from pdf2docx import Converter
 import maliang
 import tkinter.messagebox as messagebox
