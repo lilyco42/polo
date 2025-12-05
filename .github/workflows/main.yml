@@ -36,7 +36,7 @@ jobs:
           output-dir: build # Set output directory for compiled files
 
       - name: Upload executable artifact
-        uses: actions/upload-artifact@v3 # Updated to v3
+        uses: actions/upload-artifact@v4 # Updated to v4
         with:
           name: ${{ runner.os }}-build-artifacts
           path: |
