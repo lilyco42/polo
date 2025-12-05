@@ -1,0 +1,46 @@
+name: Build Executable with Nuitka
+
+on:
+  push:
+    branches:
+      - master # Trigger on pushes to the 'master' branch
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest] # Build on multiple OS platforms
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11" # Python version to use
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt  # Install dependencies
+
+      - name: Build executable with Nuitka
+        uses: Nuitka/Nuitka-Action@v1.4 # Nuitka GitHub Action
+        with:
+          script-name: your_script.py # Replace with your script name
+          mode: standalone # Options: standalone, onefile, app, etc.
+          python-flag: "-O" # Optimization flag
+          enable-plugins: tk-inter # Enable tkinter plugin if using Tkinter
+          output-dir: build # Set output directory for compiled files
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-build-artifacts
+          path: |
+            build/*.exe  # For Windows
+            build/*.bin  # For Linux
+            build/*.app/**/*  # For macOS
+          include-hidden-files: true
