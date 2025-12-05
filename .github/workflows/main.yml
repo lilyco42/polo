@@ -35,7 +35,7 @@ jobs:
       - name: Build executable with Nuitka
         uses: Nuitka/Nuitka-Action@v1.4 # Nuitka GitHub Action
         with:
-          script-name: your_script.py # Replace with your script name
+          script-name: main.py # Replace with your script name
           mode: standalone # Options: standalone, onefile, app, etc.
           python-flag: "-O" # Optimization flag
           enable-plugins: tk-inter # Enable tkinter plugin if using Tkinter
