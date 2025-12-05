@@ -9,44 +9,40 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest] # Build on multiple OS platforms
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30 # Increase the timeout if necessary
 
     steps:
-      - name: Check out repository
+      - name: Check-out repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up Python
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-
-      - name: Cache pip dependencies
-        uses: actions/cache@v4 # Update to v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: "pip"
+          cache-dependency-path: |
+            **/requirements*.txt
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt -r requirements-dev.txt
+          pip install --no-cache-dir -r requirements.txt -r requirements-dev.txt  # Install dependencies without using cache
 
-      - name: Build executable with Nuitka
-        uses: Nuitka/Nuitka-Action@v1.4 # Use stable version of Nuitka Action
+      - name: Build Executable with Nuitka
+        uses: Nuitka/Nuitka-Action@main
         with:
-          script-name: main.py # Replace with your script name
-          mode: app # For macOS app bundle, use standalone for others
+          nuitka-version: main
+          script-name: main.py
+          mode: app
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }} Build
           path: |
-            build/*.exe  # For Windows
-            build/*.bin  # For Linux
-            build/*.app/**/*  # For macOS
+            build/*.exe
+            build/*.bin
+            build/*.app/**/*
           include-hidden-files: true
